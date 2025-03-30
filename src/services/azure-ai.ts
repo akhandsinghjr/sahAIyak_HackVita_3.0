@@ -561,148 +561,167 @@ export const mentalHealthService = {
 };
 
 /**
- * Speech Service using Web Speech API
+ * Speech Service using Hugging Face API
  */
 export const speechService = {
   textToSpeech: async (text: string, voiceName: string = "female") => {
     try {
-      // Check if browser supports Web Speech API
-      if (!window.speechSynthesis) {
-        throw new Error("Web Speech API is not supported in this browser");
-      }
+      console.log("Using Hugging Face model for text-to-speech");
       
-      console.log("Using Web Speech API for text-to-speech");
+      // Select model based on voice preference
+      let modelId = "espnet/kan-bayashi_ljspeech_vits"; // Default model (female voice)
       
-      return new Promise((resolve, reject) => {
-        // Create a speech synthesis utterance
-        const utterance = new SpeechSynthesisUtterance(text);
+      if (voiceName === "male") {
+        modelId = "speechbrain/tts-tacotron2-ljspeech"; // Male voice
+      } else if (voiceName === "multilingual" || voiceName.includes("multilingual")) {
+        modelId = "facebook/mms-tts-eng"; // Multilingual model
+      } else if (voiceName === "high-quality" || voiceName.includes("high")) {
+        modelId = "facebook/yourtts-multi-dialect"; // High quality voice
+      } else if (voiceName !== "female" && voiceName !== "default") {
+        // Try to map specific voice name to a model if it's not one of our standard categories
+        const voiceModelMap: Record<string, string> = {
+          "british": "facebook/mms-tts-eng",
+          "american": "espnet/kan-bayashi_ljspeech_vits",
+          "deep": "speechbrain/tts-tacotron2-ljspeech",
+          "clear": "facebook/yourtts-multi-dialect"
+        };
         
-        // Get available voices
-        let voices = window.speechSynthesis.getVoices();
-        
-        // Sometimes voices aren't loaded immediately in some browsers
-        if (voices.length === 0) {
-          window.speechSynthesis.onvoiceschanged = () => {
-            voices = window.speechSynthesis.getVoices();
-            setVoice();
-          };
-        } else {
-          setVoice();
-        }
-        
-        function setVoice() {
-          // Select voice based on preference
-          if (voiceName === "female") {
-            // Common female voice names in various platforms
-            const femaleVoicePatterns = ['female', 'woman', 'girl', 'samantha', 'lisa', 'victoria', 'karen', 'jenny'];
-            
-            // Try to find a female voice by looking for common female voice names
-            const femaleVoice = voices.find(voice => 
-              femaleVoicePatterns.some(pattern => 
-                voice.name.toLowerCase().includes(pattern)
-              ) || voice.name.includes('Google UK English Female')
-            );
-            
-            if (femaleVoice) {
-              utterance.voice = femaleVoice;
-              console.log("Using female voice:", femaleVoice.name);
-            }
-          } else if (voiceName !== "default") {
-            // Find a specific voice that matches the requested voice name
-            const matchingVoice = voices.find(voice => 
-              voice.name.toLowerCase().includes(voiceName.toLowerCase())
-            );
-            
-            if (matchingVoice) {
-              utterance.voice = matchingVoice;
-              console.log("Using requested voice:", matchingVoice.name);
-            }
+        // Loop through our map and see if the requested voice name contains any of our keywords
+        for (const [keyword, model] of Object.entries(voiceModelMap)) {
+          if (voiceName.toLowerCase().includes(keyword)) {
+            modelId = model;
+            break;
           }
         }
-        
-        // Set other properties
-        utterance.rate = 1.0;  // Speed of speech (0.1 to 10)
-        utterance.pitch = 1.0; // Pitch of voice (0 to 2)
-        utterance.volume = 1.0; // Volume (0 to 1)
-        
-        // Setup event handlers
-        utterance.onend = () => {
+      }
+      
+      console.log(`Selected TTS model: ${modelId} for voice preference: ${voiceName}`);
+      
+      // Configure API request to Hugging Face
+      const response = await fetch(
+        `https://api-inference.huggingface.co/models/${modelId}`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${HF_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ inputs: text }),
+        }
+      );
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(`Hugging Face API error: ${error.error || 'Unknown error'}`);
+      }
+      
+      // The response will be binary audio data
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      
+      // Create and play audio element
+      const audio = new Audio(audioUrl);
+      
+      return new Promise((resolve, reject) => {
+        audio.onended = () => {
           console.log("Speech synthesis finished");
+          // Clean up the object URL to avoid memory leaks
+          URL.revokeObjectURL(audioUrl);
           resolve({
             success: true,
-            webSpeech: true,
-            audioUrl: null, // No URL since it's played directly
+            webSpeech: false,
+            huggingFace: true,
+            audioUrl: audioUrl,
+            model: modelId
           });
         };
         
-        utterance.onerror = (event) => {
-          console.error("Speech synthesis error:", event);
-          reject(new Error(`Speech synthesis failed: ${event.error || 'Unknown error'}`));
+        audio.onerror = (event) => {
+          console.error("Audio playback error:", event);
+          URL.revokeObjectURL(audioUrl);
+          reject(new Error(`Audio playback failed: ${event}`));
         };
         
-        // Speak the text
-        window.speechSynthesis.speak(utterance);
-        
-        // For browsers that don't properly trigger onend event
-        setTimeout(() => {
-          if (window.speechSynthesis.speaking) {
-            console.log("Speaking still ongoing, setting longer timeout");
-            setTimeout(() => {
-              if (window.speechSynthesis.speaking) {
-                window.speechSynthesis.cancel(); // Ensure speech is stopped
-                resolve({
-                  success: true,
-                  webSpeech: true,
-                  audioUrl: null,
-                  note: "Speech may have been cut off due to timeout"
-                });
-              }
-            }, 15000); // Extra long timeout for longer texts
-          }
-        }, 5000);
+        audio.play().catch(error => {
+          console.error("Failed to play audio:", error);
+          URL.revokeObjectURL(audioUrl);
+          reject(error);
+        });
       });
     } catch (error) {
-      console.error("Error in Web Speech API text-to-speech:", error);
+      console.error("Error in Hugging Face text-to-speech:", error);
       toast.error("Text-to-Speech Error", {
-        description: "Unable to use browser speech synthesis. Please check your browser settings.",
+        description: "Unable to use Hugging Face speech synthesis. Please check your API key and connection.",
       });
+      
+      // Fall back to browser's Web Speech API if available
+      if (window.speechSynthesis) {
+        console.log("Falling back to Web Speech API");
+        try {
+          return new Promise((resolve, reject) => {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.onend = () => {
+              resolve({
+                success: true,
+                webSpeech: true,
+                huggingFace: false,
+                fallback: true
+              });
+            };
+            utterance.onerror = (event) => reject(new Error(`Speech synthesis failed: ${event.error}`));
+            window.speechSynthesis.speak(utterance);
+          });
+        } catch (fallbackError) {
+          console.error("Fallback Web Speech API also failed:", fallbackError);
+        }
+      }
+      
       return {
         success: false,
         webSpeech: false,
+        huggingFace: false,
         error: error instanceof Error ? error.message : "Unknown error"
       };
     }
   },
   
-  // Updated to list female voices first
+  // Get available voice options for Hugging Face models
   getAvailableVoices: () => {
-    if (!window.speechSynthesis) {
-      console.error("Web Speech API is not supported in this browser");
-      return [];
-    }
-    
-    // Get all available voices
-    const voices = window.speechSynthesis.getVoices();
-    
-    // Female voice detection patterns
-    const femalePatterns = ['female', 'woman', 'girl', 'samantha', 'lisa', 'victoria', 'karen', 'jenny'];
-    
-    // Format voice info and sort to show female voices first
-    return voices.map(voice => ({
-      name: voice.name,
-      lang: voice.lang,
-      default: voice.default,
-      localService: voice.localService,
-      isFemale: femalePatterns.some(pattern => voice.name.toLowerCase().includes(pattern))
-    })).sort((a, b) => {
-      // Sort female voices first
-      if (a.isFemale && !b.isFemale) return -1;
-      if (!a.isFemale && b.isFemale) return 1;
-      return 0;
-    });
+    // These are predefined options for Hugging Face TTS models
+    return [
+      {
+        name: "Female (LJSpeech VITS)",
+        modelId: "espnet/kan-bayashi_ljspeech_vits",
+        lang: "en",
+        default: true,
+        isFemale: true
+      },
+      {
+        name: "Male (Tacotron2 LJSpeech)",
+        modelId: "speechbrain/tts-tacotron2-ljspeech",
+        lang: "en",
+        default: false,
+        isFemale: false
+      },
+      {
+        name: "Multilingual (MMS TTS)",
+        modelId: "facebook/mms-tts-eng",
+        lang: "multilingual",
+        default: false,
+        isFemale: true
+      },
+      {
+        name: "High Quality (YourTTS)",
+        modelId: "facebook/yourtts-multi-dialect",
+        lang: "multilingual",
+        default: false,
+        isFemale: false
+      }
+    ];
   },
 
-  // Add a method for browser-based speech recognition
+  // For speech recognition, we can use the browser's Web Speech API
+  // as Hugging Face doesn't support streaming audio for ASR
   startSpeechRecognition: () => {
     // Check for browser support
     if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
