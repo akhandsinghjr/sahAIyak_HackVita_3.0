@@ -619,35 +619,14 @@ export const speechService = {
       const audioBlob = await response.blob();
       const audioUrl = URL.createObjectURL(audioBlob);
       
-      // Create and play audio element
-      const audio = new Audio(audioUrl);
-      
-      return new Promise((resolve, reject) => {
-        audio.onended = () => {
-          console.log("Speech synthesis finished");
-          // Clean up the object URL to avoid memory leaks
-          URL.revokeObjectURL(audioUrl);
-          resolve({
-            success: true,
-            webSpeech: false,
-            huggingFace: true,
-            audioUrl: audioUrl,
-            model: modelId
-          });
-        };
-        
-        audio.onerror = (event) => {
-          console.error("Audio playback error:", event);
-          URL.revokeObjectURL(audioUrl);
-          reject(new Error(`Audio playback failed: ${event}`));
-        };
-        
-        audio.play().catch(error => {
-          console.error("Failed to play audio:", error);
-          URL.revokeObjectURL(audioUrl);
-          reject(error);
-        });
-      });
+      // Return the audio URL without playing - let the caller play it once
+      return {
+        success: true,
+        webSpeech: false,
+        huggingFace: true,
+        audioUrl: audioUrl,
+        model: modelId
+      };
     } catch (error) {
       console.error("Error in Hugging Face text-to-speech:", error);
       toast.error("Text-to-Speech Error", {
@@ -658,19 +637,17 @@ export const speechService = {
       if (window.speechSynthesis) {
         console.log("Falling back to Web Speech API");
         try {
-          return new Promise((resolve, reject) => {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.onend = () => {
-              resolve({
-                success: true,
-                webSpeech: true,
-                huggingFace: false,
-                fallback: true
-              });
-            };
-            utterance.onerror = (event) => reject(new Error(`Speech synthesis failed: ${event.error}`));
-            window.speechSynthesis.speak(utterance);
-          });
+          // Create utterance without playing it
+          const utterance = new SpeechSynthesisUtterance(text);
+          
+          // Return metadata instead of playing
+          return {
+            success: true,
+            webSpeech: true,
+            huggingFace: false,
+            fallback: true,
+            utterance: utterance, // Return the utterance for the caller to play
+          };
         } catch (fallbackError) {
           console.error("Fallback Web Speech API also failed:", fallbackError);
         }
