@@ -1,48 +1,49 @@
-
 import React from "react";
-import { NavLink } from "react-router-dom";
-import { Home, MessageSquare } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { ModeToggle } from "./mode-toggle";
+import { Link, useLocation } from "react-router-dom";
+import { Brain, Home, MessageSquare, BarChart } from "lucide-react";
 
 const Navigation = () => {
+  const location = useLocation();
+
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-sm fixed bottom-0 left-0 right-0 z-50 md:top-0 md:bottom-auto">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-center md:justify-center items-center p-4">
-          <ul className="flex space-x-6">
-            <li>
-              <NavLink
-                to="/chat"
-                className={({ isActive }) => cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-md transition-colors",
-                  isActive
-                    ? "bg-primary/10 text-primary"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                )}
-              >
-                <MessageSquare className="h-4 w-4" />
-                <span>Chat</span>
-              </NavLink>
-            </li>
-            <li>
-              <li>
-                <NavLink
-                  to="/"
-                  className={({ isActive }) => cn(
-                    "flex items-center gap-2 px-4 py-2 rounded-md transition-colors",
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                  )}
-                >
-                  <Home className="h-4 w-4" />
-                  <span>Home</span>
-                </NavLink>
-              </li>
-              <ModeToggle />
-            </li>
-          </ul>
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 md:top-0 md:bottom-auto md:border-t-0 md:border-b">
+      <div className="container flex justify-center items-center h-16 px-4">
+        <div className="flex space-x-1 md:space-x-2">
+          <Link
+            to="/"
+            className={`flex items-center justify-center flex-col md:flex-row px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              location.pathname === "/"
+                ? "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50"
+                : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-50"
+            }`}
+          >
+            <Home className="h-5 w-5 md:mr-2" />
+            <span className="text-xs md:text-sm">Home</span>
+          </Link>
+
+          <Link
+            to="/analysis"
+            className={`flex items-center justify-center flex-col md:flex-row px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              location.pathname === "/analysis"
+                ? "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50"
+                : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-50"
+            }`}
+          >
+            <BarChart className="h-5 w-5 md:mr-2" />
+            <span className="text-xs md:text-sm">Analysis</span>
+          </Link>
+
+          <Link
+            to="/chat"
+            className={`flex items-center justify-center flex-col md:flex-row px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              location.pathname === "/chat"
+                ? "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50"
+                : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-50"
+            }`}
+          >
+            <MessageSquare className="h-5 w-5 md:mr-2" />
+            <span className="text-xs md:text-sm">Chat</span>
+          </Link>
         </div>
       </div>
     </nav>
