@@ -11,14 +11,11 @@ A conversational AI assistant for mental health assessment that analyzes both te
 
 ### Team Name:  Cloud 9
 - Akhand Singh (2201CS11) [@akhandsinghjr](https://github.com/akhandsinghjr)
-- Anchal Dubey (2201CS15) [@anchaldubey](https://github.com/anchaldubey)
 - Aditya Chauhan (2201CS07) [@AdityaChauhan-07](https://github.com/AdityaChauhan-07)
-- Mayur Borse (2201CS45) [@mayurborse4422](https://github.com/mayurborse4422)
-- Saksham Singh (2201AI33) [@sakshams6](https://github.com/sakshams6)
 ---
 
 ### Problem Statement:
-Develop an AI-powered Mental Health Emotion Analyzer capable of assessing emotional sentiment from text, voice, and images. The system should facilitate mental health monitoring and provide appropriate assistance.
+Millions suffer from mental health issues, but many don’t seek help due to stigma or lack of accessibility. Can AI and tech-based solutions provide early detection, real-time emotional support, and personalized well-being recommendations?.
 
 ---
 
