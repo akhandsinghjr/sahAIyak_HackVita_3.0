@@ -20,6 +20,9 @@ A conversational AI assistant for mental health assessment that analyzes both te
 - **espnet/kan-bayashi_ljspeech_vits**: Text-to-speech for voice responses
 - **impira/layoutlm-document-qa**: Analysis via document
 
+![Screenshot 2025-03-31 101921](https://github.com/user-attachments/assets/012e9e50-b555-404f-b05a-4f4f2666ca79)
+
+
 ### Media Processing
 - **Camera Integration**: WebRTC API and Canvas for photo capture
 - **Speech Recognition**: Web Speech API for speech-to-text
