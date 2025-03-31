@@ -73,7 +73,6 @@ With rising competition in today's world, reports of young students facing extre
 
 ## Getting Started
 
-### Azure Hackathon
 
 ```sh
 # Step 1: Clone the repository using the project's Git URL.
