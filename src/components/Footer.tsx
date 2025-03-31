@@ -42,9 +42,8 @@ const Footer2 = ({
     {
       title: "Our Team",
       links: [
-        { text: "Akhand, Anchal", url: "#" },
-        { text: "Aditya, Mayur", url: "#" },
-        { text: "Saksham", url: "#" },
+        { text: "Akhand", url: "#" },
+        { text: "Aditya", url: "#" },
       ],
     },
     {
