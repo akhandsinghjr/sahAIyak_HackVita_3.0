@@ -11,11 +11,11 @@ A conversational AI assistant for mental health assessment that analyzes both te
 - **Components**: Custom UI component library with shadcn/ui
 - **Icons**: Lucide React
 
-### Azure AI Services
-- **Azure OpenAI Service**: GPT-4 for conversation and emotional analysis
-- **Azure Computer Vision**: Image analysis for facial expression assessment
-- **Azure Speech Service**: Text-to-speech for voice responses
-- **Azure Content Safety**: Content moderation
+### Hugging Face Models
+- **HuggingFaceH4/zephyr-7b-beta**: Zephyr for conversation and emotional analysis
+- **trpakov/vit-face-expression**: Image analysis for facial expression assessment
+- **espnet/kan-bayashi_ljspeech_vits**: Text-to-speech for voice responses
+- **impira/layoutlm-document-qa**: Analysis via document
 
 ### Media Processing
 - **Camera Integration**: WebRTC API and Canvas for photo capture
