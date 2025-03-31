@@ -20,6 +20,12 @@ Millions suffer from mental health issues, but many don’t seek help due to sti
 ---
 
 ### Our Solution:
+
+
+![Screenshot 2025-03-31 104722](https://github.com/user-attachments/assets/ff447a7e-e0bf-4956-b3e3-eb903f482827)
+
+
+
 ![image](https://github.com/user-attachments/assets/2b343287-b03c-4aae-a5da-763e995c5d85)
 
 sah-AI-yak is an AI assistant specifically designed for students to monitor their mental health and provide the necessary support. Users can undergo a brief mental health assessment, which analyzes emotional sentiment through text, images, and voice. The platform features virtual assistants, Jenny and Guy, to guide users through the assessment. Users can interact via text or utilize the integrated voice assistant for a more interactive experience. Additionally, sah-AI-yak captures images alongside text inputs to enable comprehensive analysis and detect potential deceptions. The website also offers a helpline number for individuals experiencing significant distress and seeking direct support.
