@@ -1,6 +1,7 @@
 # सह-AI-यक (Sahayak): Mental Health Assistant
 
-![image](https://github.com/user-attachments/assets/c5439031-3b2d-48e2-9829-0694e4ea4f46)
+
+![Screenshot 2025-03-31 103711](https://github.com/user-attachments/assets/3b53fc30-0338-45a1-a570-8763f2b86d99)
 
 A conversational AI assistant for mental health assessment that analyzes both text and facial expressions to provide supportive responses.
 
