@@ -3,14 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, MessageSquare, BarChart, Sparkles, HeartPulse, Users, Shield, ArrowRight, CheckCircle2 } from "lucide-react";
+import Navbar from "@/components/navbar";
 
 const Index = () => {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      {/* Add Navbar */}
+      <Navbar />
+      
       {/* Hero Section */}
-      <section className="py-20 px-4">
+      <section className="pt-28 py-20 px-4"> {/* Added padding-top to account for fixed navbar */}
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex justify-center mb-4">
             <div className="relative">
@@ -153,9 +157,9 @@ const Index = () => {
             {/* Connecting line in desktop view - Fixed positioning */}
             <div className="hidden md:block absolute h-0.5 bg-gray-200 dark:bg-gray-700" 
               style={{ 
-                top: '2.85rem', /* Align with the center of the circles */
-                left: '25%',   /* Start from the center of the first circle */
-                right: '25%',  /* End at the center of the last circle */
+                top: '1.8rem', /* Align with the center of the circles */
+                left: '15%',   /* Start from the center of the first circle */
+                right: '15%',  /* End at the center of the last circle */
                 zIndex: 0      /* Ensure it stays behind the step circles */
               }}></div>
             

@@ -10,7 +10,6 @@ export function ModeToggle() {
       variant="outline"
       size="icon"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="absolute top-4 right-4"
     >
       {theme === "dark" ? (
         <Moon className="h-[1.2rem] w-[1.2rem] transition-all" />
