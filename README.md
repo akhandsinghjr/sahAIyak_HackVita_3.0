@@ -24,7 +24,7 @@ Millions suffer from mental health issues, but many don’t seek help due to sti
 
 ![Screenshot 2025-03-31 104722](https://github.com/user-attachments/assets/ff447a7e-e0bf-4956-b3e3-eb903f482827)
 
-
+Our website includes a Mental Health Analysis tool designed to evaluate users' current well-being across multiple dimensions. Before accessing personalized recommendations or insights, users must undergo a mental health assessment that measures their state across 7-8 key parameters. Based on their responses, we assign them an overall mental health score, providing a clear summary of their well-being. This evaluation helps deliver tailored guidance, fostering a deeper understanding of one's mental health.
 
 ![image](https://github.com/user-attachments/assets/2b343287-b03c-4aae-a5da-763e995c5d85)
 
